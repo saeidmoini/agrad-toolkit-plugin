@@ -3,7 +3,7 @@
 Agrad Toolkit is a single, composable WordPress plugin that bundles the recurring tweaks we ship across Agrad projects. It focuses on security hardening, performance optimisations, operational monitoring, and a toolbox of WooCommerce utilities that used to live in seven separate plugins.
 
 ## Highlights
-- **Security & performance layer** – disable XML-RPC, hide the WP version, force `font-display: swap` in Elementor Pro, remove dashboard noise, block Gutenberg, and short‑circuit core update calls so third‑party dashboards stop timing out. Each control can be switched on/off from the settings screen.
+- **Security & performance layer** – disable XML-RPC, hide the WP version, force `font-display: swap` in Elementor Pro, remove dashboard noise, optionally disable Gutenberg, and short‑circuit core update calls so third‑party dashboards stop timing out. Each control can be switched on/off from the settings screen.
 - **Customisable HTTP guard** – when `WP_HTTP_BLOCK_EXTERNAL` is true you can still allow or deny outbound hosts from *Tools → Agrad Toolkit*. Requests to the allow list bypass WordPress’ block (e.g. `api.crocoblock.com` by default) while the block list is always enforced.
 - **Operational visibility** – exposes `/wp-health-check/v1/status?api_key=…` for uptime probes and keeps the hardened REST API disabled for visitors everywhere else.
 - **Admin hardening** – rewrites `wp-login.php` to `/agrad-admin` (toggleable) and ships the legacy comment customisations used on our Persian sites.

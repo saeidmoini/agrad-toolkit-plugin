@@ -24,7 +24,7 @@ This repository powers the multi-site Agrad Toolkit plugin. Keep these rules in 
    - When altering AJAX handlers or batch operations, test with realistic data volumes to avoid timeouts.
 
 6. **Security defaults.**  
-   - Security/performance toggles (XML-RPC, REST lockdown, Gutenberg disable, `/agrad-admin` login, HTTP guard, etc.) stay enabled by default. Any change must preserve or tighten these defaults.  
+   - Security/performance toggles (XML-RPC, REST lockdown, `/agrad-admin` login, HTTP guard, etc.) stay enabled by default; Gutenberg disable is now opt-in. Any change must preserve or tighten these defaults.  
    - The health-check endpoint must remain authenticated by API key; never expose internal details without that guard.
 
 7. **No orphaned files.**  

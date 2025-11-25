@@ -50,8 +50,6 @@ class Agrad_Module_Security {
 
 		if ( ! empty( $settings['remove_wp_version'] ) ) {
 			add_filter( 'the_generator', '__return_empty_string' );
-			add_filter( 'style_loader_src', array( __CLASS__, 'strip_version_from_assets' ), 10, 1 );
-			add_filter( 'script_loader_src', array( __CLASS__, 'strip_version_from_assets' ), 10, 1 );
 		}
 
 		if ( ! empty( $settings['disable_gutenberg'] ) ) {

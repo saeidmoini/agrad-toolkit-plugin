@@ -20,7 +20,7 @@ function agrad_default_settings() {
 		'allow_svg'               => 1,
 		'disable_rest_api'        => 1,
 		'remove_wp_version'       => 1,
-		'disable_gutenberg'       => 1,
+		'disable_gutenberg'       => 0,
 		'disable_updates_cache'   => 1,
 		'remove_dashboard_meta'   => 1,
 		'custom_font_swap'        => 1,
