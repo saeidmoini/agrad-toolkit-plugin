@@ -19,6 +19,7 @@ function agrad_default_settings() {
 		'disable_xmlrpc'          => 1,
 		'allow_svg'               => 1,
 		'disable_rest_api'        => 1,
+		'rest_allowed_prefixes'   => array(),
 		'remove_wp_version'       => 1,
 		'disable_gutenberg'       => 0,
 		'disable_updates_cache'   => 1,

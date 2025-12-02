@@ -19,12 +19,22 @@ class Agrad_Module_Security {
 	protected static $settings = array();
 
 	/**
+	 * Allowed REST route prefixes for visitors.
+	 *
+	 * @var array
+	 */
+	protected static $rest_allowed_prefixes = array();
+
+	/**
 	 * Bootstrap module.
 	 *
 	 * @param array $settings Settings array.
 	 */
 	public static function init( $settings ) {
 		self::$settings = $settings;
+		self::$rest_allowed_prefixes = array_filter(
+			array_map( array( __CLASS__, 'normalise_rest_prefix' ), (array) $settings['rest_allowed_prefixes'] )
+		);
 
 		if ( ! empty( $settings['custom_font_swap'] ) ) {
 			add_filter(
@@ -141,6 +151,10 @@ class Agrad_Module_Security {
 			return $result;
 		}
 
+		if ( self::is_route_allowed_for_visitors( $route ) ) {
+			return $result;
+		}
+
 		if ( current_user_can( 'manage_options' ) || is_user_logged_in() ) {
 			return $result;
 		}
@@ -224,5 +238,47 @@ class Agrad_Module_Security {
 		unset( $wp_meta_boxes['dashboard']['side']['core']['dashboard_quick_press'] );
 		unset( $wp_meta_boxes['dashboard']['side']['core']['dashboard_primary'] );
 		unset( $wp_meta_boxes['dashboard']['side']['core']['dashboard_secondary'] );
+	}
+
+	/**
+	 * Normalise REST prefixes.
+	 *
+	 * @param string $prefix Prefix.
+	 * @return string
+	 */
+	protected static function normalise_rest_prefix( $prefix ) {
+		$prefix = strtolower( trim( $prefix ) );
+
+		if ( '' === $prefix ) {
+			return '';
+		}
+
+		if ( '/' !== substr( $prefix, 0, 1 ) ) {
+			$prefix = '/' . $prefix;
+		}
+
+		return $prefix;
+	}
+
+	/**
+	 * Whether a REST route is whitelisted for visitors.
+	 *
+	 * @param string $route Route.
+	 * @return bool
+	 */
+	protected static function is_route_allowed_for_visitors( $route ) {
+		if ( empty( self::$rest_allowed_prefixes ) ) {
+			return false;
+		}
+
+		$route = strtolower( $route );
+
+		foreach ( self::$rest_allowed_prefixes as $prefix ) {
+			if ( '' !== $prefix && 0 === strpos( $route, $prefix ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

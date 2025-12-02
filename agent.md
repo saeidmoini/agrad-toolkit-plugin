@@ -13,6 +13,7 @@ This repository powers the multi-site Agrad Toolkit plugin. Keep these rules in 
 
 3. **Keep HTTP hygiene.**  
    - External requests are blocked by default (`WP_HTTP_BLOCK_EXTERNAL`). Any new network call must pass through the HTTP access module and expose a way to whitelist hosts.  
+   - REST is disabled for visitors by default; use the REST allow list setting (route prefixes) when a new feature needs public REST access without opening everything.
    - The Crocoblock timeout issue was fixed by stubbing update transients and whitelisting `api.crocoblock.com`. Do not regress this.
 
 4. **Admin UX expectations.**  

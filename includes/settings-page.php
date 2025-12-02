@@ -123,6 +123,19 @@ class Agrad_Settings_Page {
 				<?php endforeach; ?>
 
 				<div class="agrad-settings-card">
+					<h2><?php esc_html_e( 'REST Allow List', 'agrad-toolkit' ); ?></h2>
+					<p><?php esc_html_e( 'Allow specific REST route prefixes for visitors even when the REST API is disabled. One prefix per line, e.g. /wp-rocket/ or /wc/.', 'agrad-toolkit' ); ?></p>
+					<table class="form-table">
+						<tr>
+							<th scope="row"><?php esc_html_e( 'Allowed REST prefixes', 'agrad-toolkit' ); ?></th>
+							<td>
+								<textarea name="agrad_settings[rest_allowed_prefixes]" rows="5" cols="50"><?php echo esc_textarea( implode( "\n", (array) $options['rest_allowed_prefixes'] ) ); ?></textarea>
+							</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="agrad-settings-card">
 					<h2><?php esc_html_e( 'HTTP Access Control', 'agrad-toolkit' ); ?></h2>
 					<p><?php esc_html_e( 'One host per line. Hosts listed below are granted when HTTP blocking is enabled by wp-config. Blocked hosts always fail, even if whitelisted elsewhere.', 'agrad-toolkit' ); ?></p>
 					<table class="form-table">
