@@ -124,7 +124,7 @@ class Agrad_Settings_Page {
 
 				<div class="agrad-settings-card">
 					<h2><?php esc_html_e( 'REST Allow List', 'agrad-toolkit' ); ?></h2>
-					<p><?php esc_html_e( 'Allow specific REST route prefixes for visitors even when the REST API is disabled. One prefix per line, e.g. /wp-rocket/ or /wc/.', 'agrad-toolkit' ); ?></p>
+					<p><?php esc_html_e( 'Allow specific REST route prefixes for visitors even when the REST API is disabled. One prefix per line, e.g. /wp-rocket/ or /wc/. Global defaults from config/global-config.json are merged automatically.', 'agrad-toolkit' ); ?></p>
 					<table class="form-table">
 						<tr>
 							<th scope="row"><?php esc_html_e( 'Allowed REST prefixes', 'agrad-toolkit' ); ?></th>
@@ -137,7 +137,7 @@ class Agrad_Settings_Page {
 
 				<div class="agrad-settings-card">
 					<h2><?php esc_html_e( 'HTTP Access Control', 'agrad-toolkit' ); ?></h2>
-					<p><?php esc_html_e( 'One host per line. Hosts listed below are granted when HTTP blocking is enabled by wp-config. Blocked hosts always fail, even if whitelisted elsewhere.', 'agrad-toolkit' ); ?></p>
+					<p><?php esc_html_e( 'One host per line. Hosts listed below are granted when HTTP blocking is enabled by wp-config. Blocked hosts always fail, even if whitelisted elsewhere. Global defaults from config/global-config.json are merged automatically.', 'agrad-toolkit' ); ?></p>
 					<table class="form-table">
 						<tr>
 							<th scope="row"><?php esc_html_e( 'Allowed hosts', 'agrad-toolkit' ); ?></th>

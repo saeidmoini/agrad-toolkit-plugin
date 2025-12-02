@@ -20,6 +20,7 @@ The activation hook seeds sensible defaults: security/performance features, heal
 - Use the settings panel to toggle modules. Every switch is persisted inside `agrad_settings` so deployments stay idempotent.
 - When REST lockdown is enabled, use the REST allow list textarea to permit selected route prefixes for visitors (one prefix per line, with a leading `/`).
 - Manage allow/deny HTTP hosts with one host per line. This works in conjunction with the `WP_HTTP_BLOCK_EXTERNAL` constant already present on our servers.
+- To push shared allow/block lists across all sites, edit `config/global-config.json` in this plugin and deploy. Its REST prefixes and HTTP hosts are merged into per-site settings and shown in the UI.
 - The text replacer keeps the last 20 changes logged inside the database (`agrad_text_replacer_logs`).
 - Product maintenance logs live under `agrad_product_status_logs` and can be cleared from the UI.
 - The catalog-only toggle hooks into WooCommerce’s purchasability checks without touching stock.

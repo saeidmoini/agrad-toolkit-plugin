@@ -54,7 +54,8 @@ function agrad_get_settings() {
 		$options = array();
 	}
 
-	return wp_parse_args( $options, agrad_default_settings() );
+	$settings = wp_parse_args( $options, agrad_default_settings() );
+	return agrad_merge_global_config( $settings );
 }
 
 /**
@@ -85,6 +86,79 @@ function agrad_sanitize_settings( $input ) {
 		} else {
 			$sanitized[ $key ] = isset( $input[ $key ] ) ? 1 : 0;
 		}
+	}
+
+	return $sanitized;
+}
+
+/**
+ * Merge global config lists into settings.
+ *
+ * @param array $settings Settings array.
+ * @return array
+ */
+function agrad_merge_global_config( $settings ) {
+	$global = agrad_load_global_config();
+
+	foreach ( array( 'rest_allowed_prefixes', 'http_allowed_hosts', 'http_blocked_hosts' ) as $key ) {
+		if ( empty( $global[ $key ] ) || ! is_array( $global[ $key ] ) ) {
+			continue;
+		}
+
+		if ( ! isset( $settings[ $key ] ) || ! is_array( $settings[ $key ] ) ) {
+			$settings[ $key ] = array();
+		}
+
+		$settings[ $key ] = array_values(
+			array_unique(
+				array_merge( $settings[ $key ], $global[ $key ] )
+			)
+		);
+	}
+
+	return $settings;
+}
+
+/**
+ * Load global config overrides from config/global-config.json.
+ *
+ * @return array
+ */
+function agrad_load_global_config() {
+	$path = trailingslashit( AGRAD_PLUGIN_PATH ) . 'config/global-config.json';
+
+	if ( ! file_exists( $path ) ) {
+		return array();
+	}
+
+	$contents = file_get_contents( $path );
+
+	if ( false === $contents ) {
+		return array();
+	}
+
+	$data = json_decode( $contents, true );
+
+	if ( ! is_array( $data ) ) {
+		return array();
+	}
+
+	$allowed_keys = array( 'rest_allowed_prefixes', 'http_allowed_hosts', 'http_blocked_hosts' );
+	$sanitized    = array();
+
+	foreach ( $allowed_keys as $key ) {
+		if ( empty( $data[ $key ] ) || ! is_array( $data[ $key ] ) ) {
+			continue;
+		}
+
+		$values = array_map(
+			function( $value ) {
+				return sanitize_text_field( trim( $value ) );
+			},
+			$data[ $key ]
+		);
+
+		$sanitized[ $key ] = array_values( array_filter( array_unique( $values ) ) );
 	}
 
 	return $sanitized;
