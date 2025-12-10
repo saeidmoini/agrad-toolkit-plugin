@@ -39,6 +39,10 @@ class Agrad_Module_Admin_Path {
 		}
 
 		if ( 0 === strpos( $path, 'wp-admin' ) && ! is_user_logged_in() && ! self::is_ajax_request() ) {
+			if ( self::is_login_asset_request( $path ) ) {
+				return;
+			}
+
 			status_header( 404 );
 			nocache_headers();
 			exit;
@@ -92,5 +96,32 @@ class Agrad_Module_Admin_Path {
 
 		$script = isset( $_SERVER['SCRIPT_NAME'] ) ? basename( sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_NAME'] ) ) ) : '';
 		return 'admin-ajax.php' === $script;
+	}
+
+	/**
+	 * Allow login assets (styles/scripts/images) for unauthenticated users.
+	 *
+	 * @param string $path Request path.
+	 * @return bool
+	 */
+	protected static function is_login_asset_request( $path ) {
+		$path = ltrim( $path, '/' );
+
+		$whitelist_prefixes = array(
+			'wp-admin/load-styles.php',
+			'wp-admin/load-scripts.php',
+			'wp-admin/css/',
+			'wp-admin/js/',
+			'wp-admin/images/',
+			'wp-admin/fonts/',
+		);
+
+		foreach ( $whitelist_prefixes as $prefix ) {
+			if ( 0 === strpos( $path, $prefix ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
