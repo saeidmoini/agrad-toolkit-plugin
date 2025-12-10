@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Agrad Toolkit
-Version: 2.0.3
+Version: 2.0.4
 Description: Unified performance, security and WooCommerce utilities for Agrad sites.
 Author: Agrad Team
 */
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'AGRAD_PLUGIN_VERSION', '2.0.3' );
+define( 'AGRAD_PLUGIN_VERSION', '2.0.4' );
 define( 'AGRAD_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'AGRAD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 

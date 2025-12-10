@@ -1,5 +1,7 @@
 {
-  "rest_allowed_prefixes": [],
+  "rest_allowed_prefixes": [
+    "/wp-rocket/"
+  ],
   "http_allowed_hosts": [],
   "http_blocked_hosts": []
 }

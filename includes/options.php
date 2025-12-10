@@ -55,7 +55,7 @@ function agrad_get_settings() {
 	}
 
 	$settings = wp_parse_args( $options, agrad_default_settings() );
-	return agrad_merge_global_config( $settings );
+	return agrad_normalize_settings( agrad_merge_global_config( $settings ) );
 }
 
 /**
@@ -67,6 +67,10 @@ function agrad_get_settings() {
 function agrad_sanitize_settings( $input ) {
 	$defaults = agrad_default_settings();
 	$sanitized = array();
+
+	if ( ! is_array( $input ) ) {
+		$input = array();
+	}
 
 	foreach ( $defaults as $key => $default ) {
 		if ( is_array( $default ) ) {
@@ -88,7 +92,7 @@ function agrad_sanitize_settings( $input ) {
 		}
 	}
 
-	return $sanitized;
+	return agrad_normalize_settings( $sanitized );
 }
 
 /**
@@ -162,6 +166,37 @@ function agrad_load_global_config() {
 	}
 
 	return $sanitized;
+}
+
+/**
+ * Normalise settings values to booleans/arrays.
+ *
+ * @param array $settings Settings array.
+ * @return array
+ */
+function agrad_normalize_settings( $settings ) {
+	$defaults = agrad_default_settings();
+
+	foreach ( $defaults as $key => $default ) {
+		if ( is_array( $default ) ) {
+			$field = isset( $settings[ $key ] ) && is_array( $settings[ $key ] ) ? $settings[ $key ] : array();
+			$field = array_filter(
+				array_map(
+					function( $value ) {
+						return sanitize_text_field( trim( $value ) );
+					},
+					$field
+				)
+			);
+			$settings[ $key ] = array_values( array_unique( $field ) );
+			continue;
+		}
+
+		$value = isset( $settings[ $key ] ) ? $settings[ $key ] : $default;
+		$settings[ $key ] = filter_var( $value, FILTER_VALIDATE_BOOLEAN ) ? 1 : 0;
+	}
+
+	return $settings;
 }
 
 /**
