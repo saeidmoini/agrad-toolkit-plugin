@@ -43,8 +43,8 @@ class Agrad_Module_Admin_Path {
 				return;
 			}
 
-			status_header( 404 );
-			nocache_headers();
+			// Redirect unauthenticated admin requests to the login slug instead of serving 404 to avoid breaking assets.
+			wp_safe_redirect( home_url( '/' . self::SLUG . '/' ) );
 			exit;
 		}
 
@@ -114,6 +114,10 @@ class Agrad_Module_Admin_Path {
 			'wp-admin/js/',
 			'wp-admin/images/',
 			'wp-admin/fonts/',
+			'wp-includes/js/',
+			'wp-includes/css/',
+			'wp-includes/images/',
+			'wp-includes/fonts/',
 		);
 
 		foreach ( $whitelist_prefixes as $prefix ) {
