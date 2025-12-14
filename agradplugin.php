@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'AGRAD_PLUGIN_VERSION', '2.0.4' );
+define( 'AGRAD_PLUGIN_VERSION', '2.0.5' );
 define( 'AGRAD_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'AGRAD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -31,9 +31,29 @@ function agrad_toolkit_activate() {
 register_activation_hook( __FILE__, 'agrad_toolkit_activate' );
 
 /**
+ * One-time migration to keep REST API enabled by default.
+ */
+function agrad_toolkit_maybe_migrate_rest_default() {
+	$done = get_option( 'agrad_rest_default_migrated', 0 );
+	if ( $done ) {
+		return;
+	}
+
+	$settings = get_option( 'agrad_settings', array() );
+	if ( ! is_array( $settings ) ) {
+		$settings = array();
+	}
+
+	$settings['disable_rest_api'] = 0;
+	update_option( 'agrad_settings', agrad_sanitize_settings( $settings ) );
+	update_option( 'agrad_rest_default_migrated', 1 );
+}
+
+/**
  * Load modules once plugins are loaded.
  */
 function agrad_toolkit_bootstrap() {
+	agrad_toolkit_maybe_migrate_rest_default();
 	$settings = agrad_get_settings();
 
 	require_once AGRAD_PLUGIN_PATH . 'includes/modules/class-agrad-security.php';

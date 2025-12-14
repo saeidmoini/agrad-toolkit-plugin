@@ -15,6 +15,7 @@ Agrad Toolkit is a single, composable WordPress plugin that bundles the recurrin
 3. Visit **Tools → Agrad Toolkit** to review defaults and enable/disable modules.
 
 The activation hook seeds sensible defaults: security/performance features, health check, comment tweaks, HTTP guard, and the `/agrad-admin` login rewrite are enabled. WooCommerce utilities start disabled until you flip the relevant switches.
+REST lockdown is now off by default; enable it only after adding the necessary REST allowlist prefixes for your stack.
 
 ## Configuration
 - Use the settings panel to toggle modules. Every switch is persisted inside `agrad_settings` so deployments stay idempotent.
