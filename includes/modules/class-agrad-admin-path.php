@@ -43,8 +43,9 @@ class Agrad_Module_Admin_Path {
 				return;
 			}
 
-			// Redirect unauthenticated admin requests to the login slug instead of serving 404 to avoid breaking assets.
-			wp_safe_redirect( home_url( '/' . self::SLUG . '/' ) );
+			// Keep wp-admin hidden: serve 404 for direct hits while letting whitelisted assets through.
+			status_header( 404 );
+			nocache_headers();
 			exit;
 		}
 
