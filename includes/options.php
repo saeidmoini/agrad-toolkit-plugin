@@ -88,7 +88,11 @@ function agrad_sanitize_settings( $input ) {
 			);
 			$sanitized[ $key ] = array_values( array_unique( $field ) );
 		} else {
-			$sanitized[ $key ] = isset( $input[ $key ] ) ? 1 : 0;
+			if ( isset( $input[ $key ] ) ) {
+				$sanitized[ $key ] = (int) (bool) $input[ $key ];
+			} else {
+				$sanitized[ $key ] = 0;
+			}
 		}
 	}
 
