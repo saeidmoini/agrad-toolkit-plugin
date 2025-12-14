@@ -18,6 +18,45 @@ require_once AGRAD_PLUGIN_PATH . 'includes/options.php';
 require_once AGRAD_PLUGIN_PATH . 'includes/settings-page.php';
 
 /**
+ * Detect if the Digits plugin is active.
+ *
+ * @return bool
+ */
+function agrad_is_digits_active() {
+	static $detected = null;
+
+	if ( null !== $detected ) {
+		return $detected;
+	}
+
+	if ( class_exists( 'Digits' ) || defined( 'DIGITS_VERSION' ) || defined( 'DIGITS_FILE' ) || function_exists( 'digits_init' ) ) {
+		$detected = true;
+		return true;
+	}
+
+	$detected = false;
+
+	if ( ! function_exists( 'get_option' ) ) {
+		return false;
+	}
+
+	$active_plugins = (array) get_option( 'active_plugins', array() );
+
+	if ( is_multisite() ) {
+		$active_plugins = array_merge( $active_plugins, array_keys( (array) get_site_option( 'active_sitewide_plugins', array() ) ) );
+	}
+
+	foreach ( $active_plugins as $plugin_file ) {
+		if ( false !== stripos( $plugin_file, 'digits' ) ) {
+			$detected = true;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
  * Activation hook.
  */
 function agrad_toolkit_activate() {
@@ -35,6 +74,12 @@ register_activation_hook( __FILE__, 'agrad_toolkit_activate' );
  */
 function agrad_toolkit_bootstrap() {
 	$settings = agrad_get_settings();
+
+	// Keep the Digits login flow intact by disabling the admin path rewrite on those sites.
+	if ( agrad_is_digits_active() && ! empty( $settings['custom_admin_path'] ) ) {
+		$settings['custom_admin_path'] = 0;
+		update_option( 'agrad_settings', agrad_normalize_settings( $settings ) );
+	}
 
 	require_once AGRAD_PLUGIN_PATH . 'includes/modules/class-agrad-security.php';
 	Agrad_Module_Security::init( $settings );
