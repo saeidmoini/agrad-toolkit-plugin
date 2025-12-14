@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'AGRAD_PLUGIN_VERSION', '2.0.5' );
+define( 'AGRAD_PLUGIN_VERSION', '2.0.6' );
 define( 'AGRAD_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'AGRAD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -31,54 +31,9 @@ function agrad_toolkit_activate() {
 register_activation_hook( __FILE__, 'agrad_toolkit_activate' );
 
 /**
- * One-time migration to keep REST API enabled by default.
- */
-function agrad_toolkit_maybe_migrate_rest_default() {
-	$done = get_option( 'agrad_rest_default_migrated', 0 );
-
-	$settings = get_option( 'agrad_settings', array() );
-	if ( ! is_array( $settings ) ) {
-		$settings = array();
-	}
-
-	$defaults      = agrad_default_settings();
-	$zero_defaults = array();
-
-	foreach ( $defaults as $key => $default ) {
-		if ( 0 === $default ) {
-			$zero_defaults[] = $key;
-		}
-	}
-
-	// If a prior migration flipped all zero-default flags to "on", reset them.
-	if ( $done && ! get_option( 'agrad_zero_flags_reset', 0 ) ) {
-		$all_zero_defaults_enabled = true;
-		foreach ( $zero_defaults as $key ) {
-			if ( empty( $settings[ $key ] ) ) {
-				$all_zero_defaults_enabled = false;
-				break;
-			}
-		}
-
-		if ( $all_zero_defaults_enabled ) {
-			foreach ( $zero_defaults as $key ) {
-				$settings[ $key ] = 0;
-			}
-			update_option( 'agrad_zero_flags_reset', 1 );
-		}
-	}
-
-	$settings['disable_rest_api'] = 0;
-
-	update_option( 'agrad_settings', agrad_normalize_settings( $settings ) );
-	update_option( 'agrad_rest_default_migrated', 1 );
-}
-
-/**
  * Load modules once plugins are loaded.
  */
 function agrad_toolkit_bootstrap() {
-	agrad_toolkit_maybe_migrate_rest_default();
 	$settings = agrad_get_settings();
 
 	require_once AGRAD_PLUGIN_PATH . 'includes/modules/class-agrad-security.php';
