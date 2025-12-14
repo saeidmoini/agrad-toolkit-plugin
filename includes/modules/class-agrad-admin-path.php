@@ -148,6 +148,36 @@ class Agrad_Module_Admin_Path {
 	 * @return bool
 	 */
 	protected static function is_digits_active() {
-		return class_exists( 'Digits' ) || defined( 'DIGITS_VERSION' );
+		static $detected = null;
+
+		if ( null !== $detected ) {
+			return $detected;
+		}
+
+		if ( class_exists( 'Digits' ) || defined( 'DIGITS_VERSION' ) || defined( 'DIGITS_FILE' ) || function_exists( 'digits_init' ) ) {
+			$detected = true;
+			return true;
+		}
+
+		if ( ! function_exists( 'get_option' ) ) {
+			$detected = false;
+			return false;
+		}
+
+		$active_plugins = (array) get_option( 'active_plugins', array() );
+
+		if ( is_multisite() ) {
+			$active_plugins = array_merge( $active_plugins, array_keys( (array) get_site_option( 'active_sitewide_plugins', array() ) ) );
+		}
+
+		foreach ( $active_plugins as $plugin_file ) {
+			if ( false !== stripos( $plugin_file, 'digits' ) ) {
+				$detected = true;
+				return true;
+			}
+		}
+
+		$detected = false;
+		return false;
 	}
 }
