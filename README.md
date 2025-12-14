@@ -7,6 +7,7 @@ Agrad Toolkit is a single, composable WordPress plugin that bundles the recurrin
 - **Customisable HTTP & REST guard** – when `WP_HTTP_BLOCK_EXTERNAL` is true you can still allow or deny outbound hosts from *Tools → Agrad Toolkit*. Requests to the allow list bypass WordPress’ block (e.g. `api.crocoblock.com` by default) while the block list is always enforced. You can also keep the REST API disabled for visitors but whitelist specific route prefixes (e.g. `/wp-rocket/`, `/wc/`).
 - **Operational visibility** – exposes `/wp-health-check/v1/status?api_key=…` for uptime probes and keeps the hardened REST API disabled for visitors everywhere else.
 - **Admin hardening** – rewrites `wp-login.php` to `/agrad-admin` (toggleable) and ships the legacy comment customisations used on our Persian sites.
+- The login rewrite is skipped automatically when the Digits plugin is active to avoid conflicts with its login flow.
 - **WooCommerce toolbox** – the old standalone plugins now live as modules: term transfer assistant, bulk text replacer (posts, meta, Elementor), global discount remover, catalog/maintenance toggle, products without featured images report, post type copier, and custom product sorting.
 
 ## Installation

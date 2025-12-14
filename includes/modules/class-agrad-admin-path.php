@@ -17,6 +17,10 @@ class Agrad_Module_Admin_Path {
 	 * Init hooks.
 	 */
 	public static function init() {
+		if ( self::is_digits_active() ) {
+			return;
+		}
+
 		add_action( 'init', array( __CLASS__, 'intercept_login_request' ), 1 );
 		add_filter( 'login_url', array( __CLASS__, 'filter_login_url' ), 10, 3 );
 		add_filter( 'site_url', array( __CLASS__, 'filter_site_url' ), 10, 4 );
@@ -128,5 +132,14 @@ class Agrad_Module_Admin_Path {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Detect Digits plugin to avoid clashing with its login overrides.
+	 *
+	 * @return bool
+	 */
+	protected static function is_digits_active() {
+		return class_exists( 'Digits' ) || defined( 'DIGITS_VERSION' );
 	}
 }
