@@ -17,10 +17,6 @@ class Agrad_Module_Admin_Path {
 	 * Init hooks.
 	 */
 	public static function init() {
-		if ( self::is_digits_active() ) {
-			return;
-		}
-
 		add_action( 'init', array( __CLASS__, 'intercept_login_request' ), 1 );
 		add_filter( 'login_url', array( __CLASS__, 'filter_login_url' ), 10, 3 );
 		add_filter( 'site_url', array( __CLASS__, 'filter_site_url' ), 10, 4 );
@@ -30,6 +26,10 @@ class Agrad_Module_Admin_Path {
 	 * Serve wp-login.php when visiting /agrad-admin.
 	 */
 	public static function intercept_login_request() {
+		if ( self::is_digits_active() ) {
+			return;
+		}
+
 		if ( defined( 'WP_INSTALLING' ) && WP_INSTALLING ) {
 			return;
 		}
@@ -68,6 +68,10 @@ class Agrad_Module_Admin_Path {
 	 * Filter login_url() helper.
 	 */
 	public static function filter_login_url( $login_url, $redirect, $force_reauth ) {
+		if ( self::is_digits_active() ) {
+			return $login_url;
+		}
+
 		$url = home_url( '/' . self::SLUG . '/' );
 		if ( $redirect ) {
 			$url = add_query_arg( 'redirect_to', urlencode( $redirect ), $url );
@@ -83,6 +87,10 @@ class Agrad_Module_Admin_Path {
 	 * Filter site_url() usages for wp-login.php references.
 	 */
 	public static function filter_site_url( $url, $path, $scheme, $blog_id ) {
+		if ( self::is_digits_active() ) {
+			return $url;
+		}
+
 		if ( 'wp-login.php' === $path ) {
 			return home_url( '/' . self::SLUG . '/' );
 		}
