@@ -26,10 +26,6 @@ class Agrad_Module_Admin_Path {
 	 * Serve wp-login.php when visiting /agrad-admin.
 	 */
 	public static function intercept_login_request() {
-		if ( self::is_digits_active() ) {
-			return;
-		}
-
 		if ( defined( 'WP_INSTALLING' ) && WP_INSTALLING ) {
 			return;
 		}
@@ -68,10 +64,6 @@ class Agrad_Module_Admin_Path {
 	 * Filter login_url() helper.
 	 */
 	public static function filter_login_url( $login_url, $redirect, $force_reauth ) {
-		if ( self::is_digits_active() ) {
-			return $login_url;
-		}
-
 		$url = home_url( '/' . self::SLUG . '/' );
 		if ( $redirect ) {
 			$url = add_query_arg( 'redirect_to', urlencode( $redirect ), $url );
@@ -87,10 +79,6 @@ class Agrad_Module_Admin_Path {
 	 * Filter site_url() usages for wp-login.php references.
 	 */
 	public static function filter_site_url( $url, $path, $scheme, $blog_id ) {
-		if ( self::is_digits_active() ) {
-			return $url;
-		}
-
 		if ( 'wp-login.php' === $path ) {
 			return home_url( '/' . self::SLUG . '/' );
 		}
@@ -142,42 +130,4 @@ class Agrad_Module_Admin_Path {
 		return false;
 	}
 
-	/**
-	 * Detect Digits plugin to avoid clashing with its login overrides.
-	 *
-	 * @return bool
-	 */
-	protected static function is_digits_active() {
-		static $detected = null;
-
-		if ( null !== $detected ) {
-			return $detected;
-		}
-
-		if ( class_exists( 'Digits' ) || defined( 'DIGITS_VERSION' ) || defined( 'DIGITS_FILE' ) || function_exists( 'digits_init' ) ) {
-			$detected = true;
-			return true;
-		}
-
-		if ( ! function_exists( 'get_option' ) ) {
-			$detected = false;
-			return false;
-		}
-
-		$active_plugins = (array) get_option( 'active_plugins', array() );
-
-		if ( is_multisite() ) {
-			$active_plugins = array_merge( $active_plugins, array_keys( (array) get_site_option( 'active_sitewide_plugins', array() ) ) );
-		}
-
-		foreach ( $active_plugins as $plugin_file ) {
-			if ( false !== stripos( $plugin_file, 'digits' ) ) {
-				$detected = true;
-				return true;
-			}
-		}
-
-		$detected = false;
-		return false;
-	}
 }

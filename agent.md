@@ -21,7 +21,7 @@ This repository powers the multi-site Agrad Toolkit plugin. Keep these rules in 
 4. **Admin UX expectations.**  
    - The main menu is **Tools → Agrad Toolkit**. All subpages for modules should live under this parent.  
    - WooCommerce utilities must degrade gracefully when WooCommerce is inactive (show notices, skip hooks when possible).
-   - The login rewrite is disabled automatically when the Digits plugin is active to avoid breaking its custom login flow.
+   - Login rewrite is manual: if another login plugin (e.g., Digits) conflicts, toggle it off for that site.
 
 5. **Testing & validation.**  
    - The CLI environment might miss PHP, so syntax checks can fail. Default to `php -l` locally or run WordPress integration tests on a staging site if touching WooCommerce logic.  
